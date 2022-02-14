@@ -1,0 +1,4 @@
+discord==1.7.3
+discord-py-slash-command==3.0.1
+Faker==12.3.2
+peewee==3.13.4

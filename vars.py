@@ -7,7 +7,7 @@ dox_options = [
         name="user",
         description="User that you want to dox",
         option_type=6,
-        required=True
+        required=False
     )
 ]
 
