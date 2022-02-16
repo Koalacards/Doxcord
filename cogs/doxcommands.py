@@ -11,19 +11,15 @@ class DoxCommands(commands.Cog):
     async def dox(self, ctx, user:Option(discord.Member, "User that you want to dox")=None):
         member = user if user is not None else ctx.author
         user_id = member.id
-        dox_data = dbfunc.get_attributes(user_id)
-        ip = dox_data.get("ip", None)
-        address = dox_data.get("address", None)
-        phone = dox_data.get("phone", None)
-        name = dox_data.get("name", None)
+        dox_data = dbfunc.get_profile(user_id)
 
         title = f"Personal Information for user {member.name}"
-        description= f"Name: {name}\nAddress: {address}\nPhone Number: {phone}\nIP Address: {ip}"
+        description= ""
+        for key, value in dox_data.items(): 
+            description+= f"{key}: {value}\n\n"
         color = discord.Color.orange()
 
         await ctx.respond(embed=utils.create_embed(title, description, color))
-
-
 
 
 def setup(bot):

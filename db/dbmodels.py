@@ -10,10 +10,7 @@ class BaseModel(Model):
         database = database
 
 class DoxUserData(BaseModel):
-    address = TextField(null=True)
-    ip_address = TextField(null=True)
-    name = TextField(null=True)
-    phone_number = TextField(null=True)
+    profile = TextField(null=True)
     user_id = IntegerField(null=True)
 
     class Meta:
