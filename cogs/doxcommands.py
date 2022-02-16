@@ -1,15 +1,14 @@
 import discord
 from discord.ext import commands
-from discord_slash.cog_ext import cog_slash
 import db.dbfunc as dbfunc
 import vars
 import utils
+from discord.commands import slash_command, Option
 
 class DoxCommands(commands.Cog):
-    @cog_slash(name='dox', description='Dox a selected user!',
-    guild_ids=vars.guild_ids,
-    options=vars.dox_options)
-    async def dox(self, ctx, user:discord.Member=None):
+    @slash_command(name='dox', description='Dox a selected user!',
+    guild_ids=vars.guild_ids)
+    async def dox(self, ctx, user:Option(discord.Member, "User that you want to dox")=None):
         member = user if user is not None else ctx.author
         user_id = member.id
         dox_data = dbfunc.get_attributes(user_id)
@@ -22,7 +21,7 @@ class DoxCommands(commands.Cog):
         description= f"Name: {name}\nAddress: {address}\nPhone Number: {phone}\nIP Address: {ip}"
         color = discord.Color.orange()
 
-        await ctx.send(embed=utils.create_embed(title, description, color))
+        await ctx.respond(embed=utils.create_embed(title, description, color))
 
 
 
