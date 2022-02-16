@@ -11,7 +11,7 @@ def set_profile(user_id: int, profile:str):
         DoxUserData.create(user_id=user_id, profile=profile)
     elif len(query) == 1:
         new_query = DoxUserData.update(profile=profile).where(DoxUserData.user_id == user_id)
-        new_query.update()
+        new_query.execute()
 
 def get_profile(user_id: int):
     query = DoxUserData.select().where(DoxUserData.user_id == user_id)

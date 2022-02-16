@@ -21,6 +21,20 @@ class DoxCommands(commands.Cog):
 
         await ctx.respond(embed=utils.create_embed(title, description, color))
 
+    @slash_command(name='reset-data', description='Reset the data for a selected user!',
+    guild_ids=vars.guild_ids)
+    async def reset_data(self, ctx, user:Option(discord.Member, "User that you want to reset")=None):
+        member = user if user is not None else ctx.author
+        user_id = member.id
+        new_profile = utils.get_fake_profile()
+        dbfunc.set_profile(user_id, new_profile)
+
+        title = "Data reset successful"
+        description= f"successfully reset data for {member.name}"
+        color = discord.Color.green()
+
+        await ctx.respond(embed=utils.create_embed(title, description, color))
+
 
 def setup(bot):
     bot.add_cog(DoxCommands(bot))

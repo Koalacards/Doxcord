@@ -5,6 +5,8 @@
 
 confidential.py
 *.db
+.venv
+
 
 # User-specific files
 *.rsuser
