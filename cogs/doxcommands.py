@@ -16,7 +16,7 @@ class DoxCommands(commands.Cog):
         title = f"Personal Information for user {member.name}"
         description= ""
         for key, value in dox_data.items(): 
-            description+= f"{key}: {value}\n\n"
+            description+= f"**{key}**: {value}\n"
         color = discord.Color.orange()
 
         await ctx.respond(embed=utils.create_embed(title, description, color))
