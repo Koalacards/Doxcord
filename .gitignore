@@ -6,6 +6,8 @@
 confidential.py
 *.db
 .venv
+.idea
+*.sqbpro
 
 
 # User-specific files
