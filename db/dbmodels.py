@@ -11,6 +11,7 @@ class BaseModel(Model):
 
 class DoxUserData(BaseModel):
     profile = TextField(null=True)
+    resettable = IntegerField(null=True)
     user_id = IntegerField(null=True)
 
     class Meta:
