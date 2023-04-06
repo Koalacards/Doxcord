@@ -1,30 +1,30 @@
-from faker import Faker
-from faker.providers import internet
-from faker.providers import phone_number
-from faker.providers import profile
 import discord
+from typing import Optional, Dict
+import json
 
-def get_fake_profile():
-    fake = Faker()
-    fake.add_provider(profile)
-    profile_dict = fake.profile()
-    fake.add_provider(internet)
-    fake.add_provider(phone_number)
-    fake.ipv4_private()
-    del profile_dict['birthdate']
-    del profile_dict['website']
-    del profile_dict['username']
-    del profile_dict['mail']
-    location = profile_dict.get('current_location')
-    profile_dict['current_location'] = [float(location[0]), float(location[1])]
-    profile_dict['ip'] = fake.ipv4_private()
-    profile_dict['phone_number'] = fake.phone_number()
-    return profile_dict
 
-def create_embed(title:str, description:str, color: discord.Color):
+def create_embed(title:str, description:str, color: discord.Color) -> discord.Embed:
     embed = discord.Embed(
         title=title,
         description=description,
         color=color
     )
     return embed
+
+async def send(
+    interaction: discord.Interaction,
+    embed: discord.Embed,
+    view: Optional[discord.ui.View] = None,
+    ephemeral: bool = False,
+):
+    if view:
+        await interaction.response.send_message(
+            embed=embed, view=view, ephemeral=ephemeral
+        )
+    else:
+        await interaction.response.send_message(embed=embed, ephemeral=ephemeral)
+
+def str2dict(dict_str: str) -> Dict:
+    json_compatible = dict_str.replace("'", "\"")
+    new_dict = json.loads(json_compatible)
+    return new_dict

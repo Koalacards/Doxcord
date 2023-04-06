@@ -1,74 +1,57 @@
 import discord
+from discord import app_commands
+from discord.app_commands import Choice
 from discord.ext import commands
 import db.dbfunc as dbfunc
-import vars
-import utils
-from discord.commands import slash_command, Option
-
+from utils import send, create_embed
+from views import url_view
+from fake_profile import profile_options, update_profile, profile_choices
 
 class DoxCommands(commands.Cog):
-    @slash_command(name='dox', description='Dox a selected user!',
-                   guild_ids=vars.guild_ids)
-    async def dox(self, ctx, user: Option(discord.Member, "User that you want to dox") = None):
-        member = user if user is not None else ctx.author
+
+    def __init__(self, client: commands.Bot) -> None:
+            self.client = client
+    
+    @app_commands.command(name="dox")
+    @app_commands.describe(user="User that you want to dox!")
+    async def dox(self, interaction: discord.Interaction, user: discord.Member = None):
+        """Dox a selected user (or yourself if you leave the user field blank)!"""
+        member = user if user is not None else interaction.user
         user_id = member.id
         dox_data = dbfunc.get_profile(user_id)
 
         title = f"Personal Information for user {member.name}"
         description = ""
-        for key, value in dox_data.items():
-            description += f"**{key}**: {value}\n"
         color = discord.Color.orange()
+        embed=create_embed(title, description, color)
+        if member.avatar:
+            embed.set_thumbnail(url=member.avatar.url)
+        for index, key in enumerate(profile_options()):
+            if key == "All Options":
+                continue
+            inline = False if index % 4 == 0 else True
+            data_value = dox_data[key]
+            embed.add_field(name=key, value=data_value, inline=inline)
 
-        await ctx.respond(embed=utils.create_embed(title, description, color))
+        await send(interaction, embed=embed, view=url_view)
+    
+    @app_commands.command(name="update-profile-data")
+    @app_commands.describe(option="The data on your dox profile you wish to update (or `All Options` to change all of the data)")
+    @app_commands.choices(option=profile_choices())
+    async def update_profile_data(self, interaction: discord.Interaction, option: Choice[int]):
+        """Update a part or all of your personal dox profile to get a different fake option!"""
+        print(f"updating {option.name}")
+        user_id = interaction.user.id
+        current_profile_dict = dbfunc.get_profile(user_id)
+        updated_profile_dict = update_profile(current_profile_dict, option.name)
+        dbfunc.set_profile(user_id, updated_profile_dict)
 
-    @slash_command(name='reset-data', description='Reset the data for a selected user!',
-                   guild_ids=vars.guild_ids)
-    async def reset_data(self, ctx, user: Option(discord.Member, "User that you want to reset") = None):
-        member = user if user is not None else ctx.author
-        user_id = member.id
+        title = "Success!"
+        description = f"Option `{option.name}` has been reset for your profile! Use `/dox` to see it!"
+        color = discord.Color.green()
 
-        resettable = dbfunc.get_resettable(user_id)
-        if not resettable:
-            title = "Cannot reset data"
-            description = f"{member.name}'s data is currently not resettable\n" \
-                          f"If this is you, then use the /dont-reset-me command to be able to reset yourself"
-            color = discord.Color.red()
-
-            await ctx.respond(embed=utils.create_embed(title, description, color))
-        else:
-            new_profile = utils.get_fake_profile()
-            dbfunc.set_profile(user_id, new_profile)
-
-            title = "Data reset successful"
-            description = f"Successfully reset data for {member.name}"
-            color = discord.Color.green()
-
-            await ctx.respond(embed=utils.create_embed(title, description, color))
-
-    @slash_command(name='dont-reset-me', description='Stops your own profile from being reset',
-                       guild_ids=vars.guild_ids)
-    async def dont_reset_me(self, ctx):
-        member = ctx.author
-        user_id = member.id
-        old_resettable = dbfunc.get_resettable(user_id)
-        # Switch resettable around
-        resettable = 0 if old_resettable else 1
-        dbfunc.set_resettable(user_id, resettable)
-
-        if resettable:
-            title = "Your data is resettable"
-            description = f"{member.name}'s data is now resettable again"
-            color = discord.Color.green()
-
-            await ctx.respond(embed=utils.create_embed(title, description, color))
-        else:
-            title = "Your data is not resettable"
-            description = f"{member.name}'s data is not resettable anymore"
-            color = discord.Color.yellow()
-
-            await ctx.respond(embed=utils.create_embed(title, description, color))
+        await send(interaction, embed=create_embed(title, description, color), view=url_view)
 
 
-def setup(bot):
-    bot.add_cog(DoxCommands(bot))
+async def setup(client):
+    await client.add_cog(DoxCommands(client))
