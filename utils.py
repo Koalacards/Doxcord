@@ -1,15 +1,13 @@
-import discord
-from typing import Optional, Dict
 import json
+from typing import Dict, Optional
+
+import discord
 
 
-def create_embed(title:str, description:str, color: discord.Color) -> discord.Embed:
-    embed = discord.Embed(
-        title=title,
-        description=description,
-        color=color
-    )
+def create_embed(title: str, description: str, color: discord.Color) -> discord.Embed:
+    embed = discord.Embed(title=title, description=description, color=color)
     return embed
+
 
 async def send(
     interaction: discord.Interaction,
@@ -24,7 +22,8 @@ async def send(
     else:
         await interaction.response.send_message(embed=embed, ephemeral=ephemeral)
 
+
 def str2dict(dict_str: str) -> Dict:
-    json_compatible = dict_str.replace("'", "\"")
+    json_compatible = dict_str.replace("'", '"')
     new_dict = json.loads(json_compatible)
     return new_dict

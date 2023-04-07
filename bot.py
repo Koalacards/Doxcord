@@ -1,6 +1,8 @@
 import discord
 from discord.ext import commands, tasks
+
 from confidential import RUN_ID
+
 
 class DoxcordClient(commands.Bot):
     def __init__(self, *, command_prefix: str, intents: discord.Intents):
@@ -22,8 +24,9 @@ class DoxcordClient(commands.Bot):
             activity=discord.Game(name=f"doxxing in {guild_count} servers! Press /help")
         )
 
+
 intents = discord.Intents.default()
 
-client = DoxcordClient(command_prefix='~~~', intents=intents)
+client = DoxcordClient(command_prefix="~~~", intents=intents)
 
 client.run(RUN_ID)
