@@ -8,6 +8,7 @@ class DoxcordClient(commands.Bot):
 
     async def setup_hook(self) -> None:
         await client.load_extension("cogs.doxcommands")
+        await client.load_extension("cogs.profilecommands")
         await self.tree.sync()
 
     async def on_ready(self):

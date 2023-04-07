@@ -11,9 +11,18 @@ class BaseModel(Model):
 
 class DoxUserData(BaseModel):
     profile = TextField(null=True)
+    profile_name = TextField(null=True)
     user_id = IntegerField(null=True)
 
     class Meta:
         table_name = 'DoxUserData'
+        primary_key = False
+
+class UserSelectedProfile(BaseModel):
+    selected_profile = TextField(null=True)
+    user_id = IntegerField(null=True)
+
+    class Meta:
+        table_name = 'UserSelectedProfile'
         primary_key = False
 
