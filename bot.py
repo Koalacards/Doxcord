@@ -11,6 +11,7 @@ class DoxcordClient(commands.Bot):
     async def setup_hook(self) -> None:
         await client.load_extension("cogs.doxcommands")
         await client.load_extension("cogs.profilecommands")
+        await client.load_extension("cogs.utilitycommands")
         await self.tree.sync()
 
     async def on_ready(self):
@@ -21,7 +22,7 @@ class DoxcordClient(commands.Bot):
     async def update_presence(self):
         guild_count = str(len(client.guilds))
         await client.change_presence(
-            activity=discord.Game(name=f"doxxing in {guild_count} servers! Press /help")
+            activity=discord.Game(name=f"Doxxing in {guild_count} servers! /help")
         )
 
 

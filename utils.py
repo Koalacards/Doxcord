@@ -4,8 +4,14 @@ from typing import Dict, Optional
 import discord
 
 
-def create_embed(title: str, description: str, color: discord.Color) -> discord.Embed:
+def create_embed(
+    title: str, description: str, color: discord.Color, footer: bool = False
+) -> discord.Embed:
     embed = discord.Embed(title=title, description=description, color=color)
+    if footer:
+        embed.set_footer(
+            text="ALL of the information Doxcord uses is fake, and for entertainment purposes only."
+        )
     return embed
 
 

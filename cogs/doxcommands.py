@@ -29,7 +29,7 @@ class DoxCommands(commands.Cog):
         title = f"Personal Information for user {member.name}"
         description = f"Active profile: **{profile_name}** (Use `/switch-profile` to switch your active profile)"
         color = discord.Color.orange()
-        embed = create_embed(title, description, color)
+        embed = create_embed(title, description, color, footer=True)
         if member.avatar:
             embed.set_thumbnail(url=member.avatar.url)
 

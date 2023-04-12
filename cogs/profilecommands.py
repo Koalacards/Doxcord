@@ -35,7 +35,11 @@ class ProfileCommands(commands.Cog):
             )
             description = "\n".join(selected_bolded)
 
-        await send(interaction, create_embed(title, description, color), view=url_view)
+        await send(
+            interaction,
+            create_embed(title, description, color, footer=True),
+            view=url_view,
+        )
 
     @app_commands.command(name="create-profile")
     @app_commands.describe(profile_name="Name of your new fake profile!")
@@ -58,7 +62,9 @@ class ProfileCommands(commands.Cog):
             description = f"You have successfully created fake profile `{profile_name}`! Use `/dox` to view the profile."
             await send(
                 interaction,
-                create_embed("Success", description, discord.Color.green()),
+                create_embed(
+                    "Success", description, discord.Color.green(), footer=True
+                ),
                 view=url_view,
             )
 
@@ -80,7 +86,9 @@ class ProfileCommands(commands.Cog):
             description = f"Your active profile is now `{profile_name}`! Use `/dox` to view the profile."
             await send(
                 interaction,
-                create_embed("Success", description, discord.Color.green()),
+                create_embed(
+                    "Success", description, discord.Color.green(), footer=True
+                ),
                 view=url_view,
             )
 
@@ -112,7 +120,9 @@ class ProfileCommands(commands.Cog):
             description = f"`{profile_name}` has been successfully deleted!"
             await send(
                 interaction,
-                create_embed("Success", description, discord.Color.green()),
+                create_embed(
+                    "Success", description, discord.Color.green(), footer=True
+                ),
                 view=url_view,
             )
 
@@ -142,7 +152,9 @@ class ProfileCommands(commands.Cog):
         color = discord.Color.green()
 
         await send(
-            interaction, embed=create_embed(title, description, color), view=url_view
+            interaction,
+            embed=create_embed(title, description, color, footer=True),
+            view=url_view,
         )
 
 
