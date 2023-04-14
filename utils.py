@@ -21,12 +21,13 @@ async def send(
     view: Optional[discord.ui.View] = None,
     ephemeral: bool = False,
 ):
+    kwargs = {}
+    kwargs["embed"] = embed
+    kwargs["ephemeral"] = ephemeral
     if view:
-        await interaction.response.send_message(
-            embed=embed, view=view, ephemeral=ephemeral
-        )
-    else:
-        await interaction.response.send_message(embed=embed, ephemeral=ephemeral)
+        kwargs["view"] = view
+
+    await interaction.response.send_message(**kwargs)
 
 
 def str2dict(dict_str: str) -> Dict:
