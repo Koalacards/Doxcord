@@ -21,11 +21,13 @@ def get_fake_profile():
 
 
 def _fake_profile_modifications(profile_dict: dict) -> dict:
-    location = profile_dict.get("current_location")
-    profile_dict["current_location"] = [float(location[0]), float(location[1])]
+    location = profile_dict.get("location", None)
+    if not location:
+        location = profile_dict.pop("current_location")
+    profile_dict["location"] = [float(location[0]), float(location[1])]
     websites = profile_dict.get("website")
-    if type(websites) == list:
-        profile_dict["website"] = ", ".join(websites)
+    if type(websites) == list and len(websites) > 0:
+        profile_dict["website"] = websites[0]
     birthdate = profile_dict.get("birthdate")
     if type(birthdate) == date:
         profile_dict[
@@ -48,7 +50,7 @@ def profile_options() -> List[str]:
         "website",
         "username",
         "ip",
-        "current_location",
+        "location",
         "company",
         "residence",
         "blood_group",
@@ -85,6 +87,7 @@ def update_profile(profile_dict: dict, option: str) -> dict:
     else:
         fake.add_provider(profile)
         second_profile = fake.profile()
+        second_profile["location"] = second_profile.get("current_location")
         new_value = second_profile[option]
         profile_dict[option] = new_value
         profile_dict = _fake_profile_modifications(profile_dict)

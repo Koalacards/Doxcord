@@ -1,3 +1,5 @@
+import os
+import random
 import discord
 from discord import app_commands
 from discord.ext import commands
@@ -39,7 +41,13 @@ class DoxCommands(commands.Cog):
             data_value = dox_data[key]
             embed.add_field(name=key, value=data_value, inline=True)
 
-        await send(interaction, embed=embed, view=url_view)
+        images = os.listdir("img")
+        random_img_filepath = f"img/{images[random.randint(0, len(images)-1)]}"
+
+        img_file = discord.File(random_img_filepath, filename="image.png")
+        embed.set_image(url=f"attachment://image.png")
+
+        await send(interaction, embed=embed, view=url_view, file=img_file)
 
 
 async def setup(client):
